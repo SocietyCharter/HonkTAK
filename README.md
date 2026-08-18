@@ -1,27 +1,32 @@
 # HonkTAK — Tactical Goose Awareness System
 
-HonkTAK is a clearly labeled joke plugin for ATAK-CIV. It adds an isolated, ephemeral `HonkTAK Sightings` overlay and a **REPORT HONK** button. Sightings use a custom goose icon and the label **Unidentified Waterfowl**; they never use friendly, hostile, or other military symbology.
+HonkTAK is a clearly labeled joke plugin for ATAK-CIV. v0.2.0 portable source adds user-entered camera-location observations with separate **SAVE LOCALLY** and **SHARE TO TEAM** actions. Sightings use a custom goose icon and **Unidentified Waterfowl** label; they never use friendly, hostile, or other affiliation symbology.
 
 ![HonkTAK local overlay mockup](docs/mockup.svg)
 
-## Safety boundary
+## Network behavior and safety boundary
 
-HonkTAK does not send network CoT, write mission packages, control UAS systems, emit operational alerts, or modify real mission data. Every marker is tagged `nevercot`, is not archived, and is removed automatically. No Android/device or hardware action is part of the build or test workflow.
+**SHARE TO TEAM sends the completed observation off-device through ATAK's currently connected TAK network.** It uses the public ATAK external CoT dispatcher—no direct sockets or alternate transport. Transmission occurs only after the user presses the visibly labeled share action; opening the form and saving locally never transmit. Incoming HonkTAK CoT is bounded, validated, and rendered in the HonkTAK overlay.
+
+HonkTAK does not access camera feeds, discover devices, scan Wi-Fi/Bluetooth, perform recognition, collect identifiers/contacts/device IDs, write mission packages, control UAS systems, or mutate real mission data. Local removal is local only and does not send a remote delete. No new Android permission is requested.
 
 ## Features
 
 - Four randomized local SITREPs.
 - `FLOCKPOCALYPSE` when three active sightings fall within 500 m of any active sighting.
-- Configurable expiry from 1 to 1,440 minutes (30 minutes by default).
+- Camera class, optional azimuth, confidence, status, bounded notes, observed time, and configurable expiry.
+- Configurable expiry from 1 minute to 7 days (30 minutes by default); shared CoT stale time and local cleanup match.
 - Optional audio setting is disabled by default. v0.1.0 intentionally bundles no audio asset, so the control remains disabled.
 
 ## Public source authority
 
 This project was derived from the public `plugin-examples/plugintemplate` in [`deptofdefense/AndroidTacticalAssaultKit-CIV`](https://github.com/deptofdefense/AndroidTacticalAssaultKit-CIV) at commit `889eee292c43d3d2eafdd1f2fbf378ad5cd89ecc`, tag `4.6.0.5`, dated 2024-10-18. No TAK.gov-authenticated SDK, UAS Tool artifact, private package, credential, or signing key is included.
 
-## Build
+## Build status
 
-Prerequisites: JDK 11, Android SDK/build-tools 30.0.2, and the public ATAK-CIV `atak-gradle-takdev.jar` built from the recorded upstream source. Create an untracked `local.properties` with `sdk.dir`, `takdev.plugin`, and your own debug signing-key paths/passwords. Never commit it. HonkTAK intentionally does not support authenticated TAK artifact repositories.
+The exact installed ATAK-CIV version/build is currently unknown. v0.2.0 is portable source and is **not yet claimed compatible or released**. A guarded APK build, signer creation, compatibility claim, and public v0.2.0 release remain blocked until the exact target build is supplied.
+
+Prerequisites after target confirmation: JDK 11, the matching Android SDK/build tools, and a lawfully public matching ATAK-CIV devkit built from public source. Create an untracked `local.properties` with `sdk.dir`, `takdev.plugin`, and owner-only signing-key references. Never commit it. HonkTAK intentionally does not support authenticated TAK artifact repositories.
 
 Run only the allowlisted wrapper task:
 
@@ -37,7 +42,7 @@ Installation is deliberately outside this repository's automated workflow. After
 
 ## Tests
 
-Host-side unit tests cover expiry, proximity/count threshold, disabled audio default, and the local-only/no-CoT policy. The source can also be checked with plain `javac` for the pure policy classes when the Android toolchain is unavailable.
+Host-side unit tests cover explicit one-shot share gating, no silent sends, CoT serialization/receive parsing, malformed/oversized/stale/range rejection, expiry, azimuth bounds, local-only construction, and FLOCKPOCALYPSE.
 
 ## Removal / rollback
 

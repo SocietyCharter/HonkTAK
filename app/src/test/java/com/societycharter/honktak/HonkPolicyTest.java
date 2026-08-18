@@ -23,7 +23,8 @@ public class HonkPolicyTest {
     }
     @Test public void audioIsDisabledByDefault() { assertFalse(HonkPolicy.DEFAULT_AUDIO_ENABLED); }
     @Test public void localOnlyBoundaryIsHardFalse() {
-        assertFalse(LocalOnlyBoundary.COT_TRANSMISSION_ALLOWED);
+        assertFalse(LocalOnlyBoundary.AUTOMATIC_COT_TRANSMISSION_ALLOWED);
+        assertTrue(LocalOnlyBoundary.EXPLICIT_USER_COT_SHARE_ALLOWED);
         assertFalse(LocalOnlyBoundary.MISSION_PACKAGE_WRITES_ALLOWED);
         assertFalse(LocalOnlyBoundary.UAS_CONTROLS_ALLOWED);
     }

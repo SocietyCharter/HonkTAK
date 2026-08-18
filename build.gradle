@@ -1,5 +1,5 @@
 buildscript {
-    ext.PLUGIN_VERSION = "0.1.0"
+    ext.PLUGIN_VERSION = "0.2.0"
     ext.ATAK_VERSION = "4.6.0"
     def readProperty = { File file, String key ->
         if (!file.isFile() || !file.canRead()) return null
