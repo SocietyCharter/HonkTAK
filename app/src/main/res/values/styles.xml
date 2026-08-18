@@ -1,0 +1,4 @@
+<resources>
+    <style name="ATAKPluginTheme" parent="@android:style/Theme.Holo"><item name="android:textColor">@android:color/white</item></style>
+    <style name="AppTheme" parent="@android:style/Theme.Holo" />
+</resources>

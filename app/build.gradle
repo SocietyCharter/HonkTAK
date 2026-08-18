@@ -1,0 +1,34 @@
+apply plugin: 'com.android.application'
+apply plugin: 'atak-takdev-plugin'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "30.0.2"
+    lintOptions { checkReleaseBuilds true; abortOnError true }
+    signingConfigs {
+        debug {
+            def p = new Properties()
+            def f = project.rootProject.file('local.properties')
+            if (f.isFile()) f.withReader { p.load(it) }
+            if (!p.getProperty('takDebugKeyFile')) throw new GradleException('No local debug signing key configured; no key is distributed with HonkTAK.')
+            storeFile file(p.getProperty('takDebugKeyFile'))
+            storePassword p.getProperty('takDebugKeyFilePassword')
+            keyAlias p.getProperty('takDebugKeyAlias')
+            keyPassword p.getProperty('takDebugKeyPassword')
+        }
+    }
+    buildTypes { debug { debuggable true; matchingFallbacks = ['sdk'] } }
+    flavorDimensions "application"
+    productFlavors { civ { dimension "application"; manifestPlaceholders = [atakApiVersion: "com.atakmap.app@" + ATAK_VERSION + ".CIV"] } }
+    sourceSets {
+        main {
+            setProperty('archivesBaseName', 'ATAK-Plugin-' + rootProject.name + '-' + PLUGIN_VERSION + '-' + getVersionName() + '-' + ATAK_VERSION)
+            defaultConfig.versionCode = getVersionCode()
+            defaultConfig.versionName = PLUGIN_VERSION + ' (' + getVersionName() + ') - [' + ATAK_VERSION + ']'
+        }
+        debug.setRoot('build-types/debug')
+    }
+    defaultConfig { minSdkVersion 21 }
+    testOptions { unitTests.returnDefaultValues = true }
+}
+dependencies { testImplementation 'junit:junit:4.13.2' }

@@ -1,0 +1,9 @@
+HonkTAK v0.1.0
+Copyright 2026 SocietyCharter contributors
+
+Derived from the public AndroidTacticalAssaultKit-CIV plugin template:
+https://github.com/deptofdefense/AndroidTacticalAssaultKit-CIV
+Commit: 889eee292c43d3d2eafdd1f2fbf378ad5cd89ecc
+Tag/version: 4.6.0.5
+
+The upstream repository is licensed under GNU GPL version 3. HonkTAK is a modified work and is distributed under GPL-3.0-only. ATAK is a trademark/product name of its respective owner; this project is not endorsed by the U.S. Department of Defense.
