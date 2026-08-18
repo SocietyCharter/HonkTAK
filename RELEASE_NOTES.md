@@ -14,4 +14,4 @@ Artifact policy: attach an APK only after an allowlisted build succeeds from pub
 - Adds bounded CoT serialization, inbound validation/rendering, and stale-time cleanup.
 - Adds explicit-share/no-silent-send, codec, malformed-input, bounds, expiry, and existing flock tests.
 
-Release is blocked until the exact installed ATAK-CIV version/build is supplied and a matching public devkit, guarded APK build, signer fingerprint, APK inspection, and compatibility validation all pass.
+Target is confirmed as ATAK `v5.6.0.12` / Plugin API `5.6.0.CIV`, Play Store build `1769863102`. Release remains blocked until Jesse supplies an authorized matching plugin SDK/devkit and the guarded APK build, signer fingerprint, APK inspection, and compatibility validation all pass. The public 4.6 devkit is not a valid substitute.

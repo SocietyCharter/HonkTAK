@@ -38,7 +38,7 @@ The guarded Society build surface uses `plugin_build(project_path, task=assemble
 
 ## Install
 
-Installation is deliberately outside this repository's automated workflow. After independently verifying the APK hash and signer, an authorized operator may install it using their normal ATAK-CIV plugin process. The portable source is derived from the public ATAK-CIV 4.6.0.5 template, but no installed-build compatibility claim is made until the exact target ATAK-CIV version/build is supplied and tested.
+Installation is deliberately outside this repository's automated workflow. After independently verifying the APK hash and signer, an authorized operator may install it using their normal ATAK-CIV plugin process. The portable source is derived from the public ATAK-CIV 4.6.0.5 template, but no binary compatibility claim is made until it is built and tested with the authorized matching 5.6.0.CIV plugin SDK/devkit.
 
 ## Tests
 
