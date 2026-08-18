@@ -24,9 +24,9 @@ This project was derived from the public `plugin-examples/plugintemplate` in [`d
 
 ## Build status
 
-The exact installed ATAK-CIV version/build is currently unknown. v0.2.0 is portable source and is **not yet claimed compatible or released**. A guarded APK build, signer creation, compatibility claim, and public v0.2.0 release remain blocked until the exact target build is supplied.
+The installed target is ATAK `v5.6.0.12`, source identifier `9c9a5897`, Play Store build `1769863102`, requiring Plugin API `5.6.0.CIV` on Android API 36. v0.2.0 is portable source and is **not yet claimed binary-compatible or released**. The official public `deptofdefense/AndroidTacticalAssaultKit-CIV` tags end at `4.6.0.5`; that public devkit must not be used to build an APK for this 5.6 target.
 
-Prerequisites after target confirmation: JDK 11, the matching Android SDK/build tools, and a lawfully public matching ATAK-CIV devkit built from public source. Create an untracked `local.properties` with `sdk.dir`, `takdev.plugin`, and owner-only signing-key references. Never commit it. HonkTAK intentionally does not support authenticated TAK artifact repositories.
+Prerequisites after Jesse provides the authorized SDK: the toolchain required by that SDK and an authorized ATAK `5.6.0.CIV` plugin SDK/devkit. Create an untracked `local.properties` with SDK paths and owner-only signing-key references. Never commit it. Do not substitute the public 4.6 devkit, reverse-engineer the Play Store APK, or obtain authenticated TAK.gov material indirectly.
 
 Run only the allowlisted wrapper task:
 
@@ -38,7 +38,7 @@ The guarded Society build surface uses `plugin_build(project_path, task=assemble
 
 ## Install
 
-Installation is deliberately outside this repository's automated workflow. After independently verifying the APK hash and signer, an authorized operator may install it using their normal ATAK-CIV plugin process. HonkTAK compatibility targets ATAK-CIV 4.6.0.
+Installation is deliberately outside this repository's automated workflow. After independently verifying the APK hash and signer, an authorized operator may install it using their normal ATAK-CIV plugin process. The portable source is derived from the public ATAK-CIV 4.6.0.5 template, but no installed-build compatibility claim is made until the exact target ATAK-CIV version/build is supplied and tested.
 
 ## Tests
 
