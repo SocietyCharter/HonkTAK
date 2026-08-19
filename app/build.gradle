@@ -37,6 +37,13 @@ plugins {
 }
 apply plugin: 'atak-takdev-plugin'
 
+// The offline TakDev plugin supplies ATAK artifacts through its private flatDir.
+// Keep public Android lint/tooling resolvable for guarded release builds.
+repositories {
+    google()
+    mavenCentral()
+}
+
 def privateProperties = new Properties()
 def privatePropertiesFile = project.rootProject.file('local.properties')
 if (privatePropertiesFile.isFile()) privatePropertiesFile.withReader { privateProperties.load(it) }
