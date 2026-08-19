@@ -1,3 +1,12 @@
+# HonkTAK v0.2.1 release candidate — not for installation
+
+ATAK v5.6.0.12 Play Store rejected the v0.2.0 debug-signed plugin because its
+certificate is not trusted by ATAK's release-plugin signer policy. APK signature
+integrity passed, but ATAK plugin trust failed. v0.2.1 is a non-debuggable CIV
+release candidate only; do not publish or install it until an official TAK
+Product Center signing/registration path is completed and Jesse confirms that
+ATAK loads it.
+
 # Install HonkTAK v0.2.0 on a phone
 
 1. Download `HonkTAK-v0.2.0-ATAK-5.6.0-CIV.apk` from the official GitHub Release.

@@ -1,13 +1,18 @@
 # HonkTAK — Tactical Goose Awareness System
 
-## Install on an ATAK 5.6 phone
+## Release status
 
-1. On the phone, download the clearly named `HonkTAK-v0.2.0-ATAK-5.6.0-CIV.apk` from the official GitHub Release.
-2. Tap the downloaded APK in the browser's downloads list or the phone's Files app.
-3. If Android shows **For your security, your phone currently isn't allowed to install unknown apps from this source**, open **Settings** from that prompt, allow **Install unknown apps** for that browser or file manager, return, and tap the APK again.
-4. Tap **Install**, open ATAK, then open ATAK's **Tools** menu and select **HonkTAK**. If it is not on the active toolbar, open ATAK's **Tool Manager**, enable HonkTAK, and add/open it there.
+Public v0.1.x only. ATAK v5.6.0.12 Play Store rejected the withdrawn
+v0.2.0 debug-signed plugin because its signer was not trusted. v0.2.1 is a
+private, non-debuggable release candidate and must not be installed or
+published until the official TAK plugin signing/registration path and a
+separately authorized phone runtime test pass.
 
-Tested build target: **ATAK v5.6.0.12 Play Store**, Plugin API **5.6.0.CIV**, Android API **36**. HonkTAK needs no server or configuration for local markers. **SHARE TO TEAM** uses ATAK's existing TAK connection; when ATAK is disconnected, HonkTAK states that nothing was saved or sent and performs no silent retry.
+Build target: **ATAK v5.6.0.12 Play Store**, Plugin API **5.6.0.CIV**,
+Android API **36**. HonkTAK needs no server or configuration for local markers.
+**SHARE TO TEAM** uses ATAK's existing TAK connection; when ATAK is
+disconnected, HonkTAK states that nothing was saved or sent and performs no
+silent retry.
 
 HonkTAK is a clearly labeled joke plugin for ATAK-CIV. v0.2.0 portable source adds user-entered camera-location observations with separate **SAVE LOCALLY** and **SHARE TO TEAM** actions. Sightings use a custom goose icon and **Unidentified Waterfowl** label; they never use friendly, hostile, or other affiliation symbology.
 
