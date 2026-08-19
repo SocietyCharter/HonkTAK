@@ -149,3 +149,15 @@ dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
     testImplementation 'junit:junit:4.13.2'
 }
+
+// Owner-supplied ATAK Espresso harness remains outside version control. The
+// local path points at the private SDK intake and is required only for test
+// artifact builds; no SDK test binaries are redistributed with source.
+def takEspressoSetup = privateProperties.getProperty('takEspressoSetup')
+if (takEspressoSetup) {
+    def setupFile = file(takEspressoSetup)
+    if (!setupFile.isFile()) {
+        throw new GradleException('Configured ATAK Espresso testSetup.gradle was not found.')
+    }
+    apply from: setupFile
+}
