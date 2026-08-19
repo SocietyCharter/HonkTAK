@@ -24,12 +24,12 @@ import com.atakmap.android.cot.CotMapComponent;
 import com.atakmap.android.dropdown.DropDown.OnStateListener;
 import com.atakmap.android.dropdown.DropDownReceiver;
 import com.atakmap.android.maps.DefaultMapGroup;
-import com.atakmap.android.maps.Icon;
 import com.atakmap.android.maps.MapGroup;
 import com.atakmap.android.maps.MapView;
 import com.atakmap.android.maps.Marker;
 import com.atakmap.comms.CotServiceRemote;
 import com.atakmap.coremap.cot.event.CotEvent;
+import com.atakmap.coremap.maps.assets.Icon;
 import com.atakmap.coremap.maps.coords.GeoPoint;
 import com.atakmap.coremap.maps.coords.GeoPointMetaData;
 import com.societycharter.honktak.plugin.R;
@@ -46,6 +46,7 @@ public final class HonkTakDropDownReceiver extends DropDownReceiver implements O
     private final Random random = new Random();
     private final ShareGate shareGate = new ShareGate();
     private final CotServiceRemote cotRemote = new CotServiceRemote();
+    private volatile boolean cotConnected;
 
     public HonkTakDropDownReceiver(MapView mapView, Context context) {
         super(mapView);
@@ -90,6 +91,11 @@ public final class HonkTakDropDownReceiver extends DropDownReceiver implements O
                 CameraObservation.Confidence.valueOf(selected(R.id.confidence).toUpperCase()),
                 CameraObservation.Status.valueOf(selected(R.id.camera_status).toUpperCase()),
                 ((EditText) view.findViewById(R.id.notes)).getText().toString(), observed, observed + expiryMinutes * 60L * 1000L);
+            if (requestShare && !cotConnected) {
+                shareGate.consumeForSend();
+                statusView.setText("TAK network is disconnected; nothing was saved or sent. Connect ATAK and press SHARE TO TEAM again.");
+                return;
+            }
             addLocal(observation);
             String sitrep = HonkPolicy.SITREPS[random.nextInt(HonkPolicy.SITREPS.length)];
             if (HonkPolicy.triggersFlockpocalypse(activeSightings(), observed, expiryMinutes * 60L * 1000L)) sitrep = "FLOCKPOCALYPSE";
@@ -126,7 +132,6 @@ public final class HonkTakDropDownReceiver extends DropDownReceiver implements O
         marker.setTitle(HonkPolicy.MARKER_LABEL);
         marker.setType(HonkCotCodec.COT_TYPE);
         marker.setAlwaysShowText(true);
-        marker.setTouchable(true);
         marker.setMetaBoolean("nevercot", true);
         marker.setMetaBoolean("archive", false);
         marker.setMetaBoolean("honktak.local_only_render", true);
@@ -157,8 +162,8 @@ public final class HonkTakDropDownReceiver extends DropDownReceiver implements O
 
     @Override public void onReceive(Context context, Intent intent) { if (intent != null && SHOW_PLUGIN.equals(intent.getAction())) showDropDown(view, HALF_WIDTH, FULL_HEIGHT, FULL_WIDTH, HALF_HEIGHT, false, this); }
     @Override protected void disposeImpl() { handler.removeCallbacksAndMessages(null); cotRemote.setCotEventListener(null); cotRemote.disconnect(); for (Record r : new ArrayList<>(sightings)) group.removeItem(r.marker); sightings.clear(); getMapView().getRootGroup().removeGroup(group); }
-    @Override public void onCotServiceConnected(Bundle state) { }
-    @Override public void onCotServiceDisconnected() { }
+    @Override public void onCotServiceConnected(Bundle state) { cotConnected = true; }
+    @Override public void onCotServiceDisconnected() { cotConnected = false; }
     @Override public void onDropDownSelectionRemoved() { }
     @Override public void onDropDownVisible(boolean visible) { }
     @Override public void onDropDownSizeChanged(double width, double height) { }

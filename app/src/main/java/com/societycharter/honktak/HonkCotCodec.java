@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -39,8 +38,12 @@ public final class HonkCotCodec {
             f.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
             f.setFeature("http://xml.org/sax/features/external-general-entities", false);
             f.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
-            f.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-            f.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+            try {
+                f.setAttribute("http://javax.xml.XMLConstants/property/accessExternalDTD", "");
+                f.setAttribute("http://javax.xml.XMLConstants/property/accessExternalSchema", "");
+            } catch (IllegalArgumentException ignored) {
+                // Older Android parsers lack JAXP 1.5 properties; entity features above remain enforced.
+            }
             Document d = f.newDocumentBuilder().parse(new InputSource(new StringReader(xml)));
             Element event = d.getDocumentElement();
             if (!"event".equals(event.getTagName()) || !COT_TYPE.equals(event.getAttribute("type"))) throw new IllegalArgumentException("wrong CoT type");

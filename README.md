@@ -1,5 +1,14 @@
 # HonkTAK — Tactical Goose Awareness System
 
+## Install on an ATAK 5.6 phone
+
+1. On the phone, download the clearly named `HonkTAK-v0.2.0-ATAK-5.6.0-CIV.apk` from the official GitHub Release.
+2. Tap the downloaded APK in the browser's downloads list or the phone's Files app.
+3. If Android shows **For your security, your phone currently isn't allowed to install unknown apps from this source**, open **Settings** from that prompt, allow **Install unknown apps** for that browser or file manager, return, and tap the APK again.
+4. Tap **Install**, open ATAK, then open ATAK's **Tools** menu and select **HonkTAK**. If it is not on the active toolbar, open ATAK's **Tool Manager**, enable HonkTAK, and add/open it there.
+
+Tested build target: **ATAK v5.6.0.12 Play Store**, Plugin API **5.6.0.CIV**, Android API **36**. HonkTAK needs no server or configuration for local markers. **SHARE TO TEAM** uses ATAK's existing TAK connection; when ATAK is disconnected, HonkTAK states that nothing was saved or sent and performs no silent retry.
+
 HonkTAK is a clearly labeled joke plugin for ATAK-CIV. v0.2.0 portable source adds user-entered camera-location observations with separate **SAVE LOCALLY** and **SHARE TO TEAM** actions. Sightings use a custom goose icon and **Unidentified Waterfowl** label; they never use friendly, hostile, or other affiliation symbology.
 
 ![HonkTAK local overlay mockup](docs/mockup.svg)
@@ -20,13 +29,13 @@ HonkTAK does not access camera feeds, discover devices, scan Wi-Fi/Bluetooth, pe
 
 ## Public source authority
 
-This project was derived from the public `plugin-examples/plugintemplate` in [`deptofdefense/AndroidTacticalAssaultKit-CIV`](https://github.com/deptofdefense/AndroidTacticalAssaultKit-CIV) at commit `889eee292c43d3d2eafdd1f2fbf378ad5cd89ecc`, tag `4.6.0.5`, dated 2024-10-18. No TAK.gov-authenticated SDK, UAS Tool artifact, private package, credential, or signing key is included.
+This project was derived from the public `plugin-examples/plugintemplate` in [`deptofdefense/AndroidTacticalAssaultKit-CIV`](https://github.com/deptofdefense/AndroidTacticalAssaultKit-CIV) at commit `889eee292c43d3d2eafdd1f2fbf378ad5cd89ecc`, tag `4.6.0.5`, dated 2024-10-18. Compatibility validation additionally used an authorized ATAK 5.6.0 CIV SDK supplied by the project owner; that SDK is not redistributable and is not included. No TAK.gov SDK, UAS Tool artifact, private package, credential, or signing key is included in this repository.
 
 ## Build status
 
-The installed target is ATAK `v5.6.0.12`, source identifier `9c9a5897`, Play Store build `1769863102`, requiring Plugin API `5.6.0.CIV` on Android API 36. v0.2.0 is portable source and is **not yet claimed binary-compatible or released**. The official public `deptofdefense/AndroidTacticalAssaultKit-CIV` tags end at `4.6.0.5`; that public devkit must not be used to build an APK for this 5.6 target.
+The target is ATAK `v5.6.0.12`, source identifier `9c9a5897`, Play Store build `1769863102`, requiring Plugin API `5.6.0.CIV` on Android API 36. The guarded offline build compiles against the authorized 5.6.0 CIV SDK and declares `com.atakmap.app@5.6.0.CIV`. Runtime loading on Jesse's phone remains untested because this workflow never installs or alters a device.
 
-Prerequisites after Jesse provides the authorized SDK: the toolchain required by that SDK and an authorized ATAK `5.6.0.CIV` plugin SDK/devkit. Create an untracked `local.properties` with SDK paths and owner-only signing-key references. Never commit it. Do not substitute the public 4.6 devkit, reverse-engineer the Play Store APK, or obtain authenticated TAK.gov material indirectly.
+Build prerequisites are Android SDK 36, Java 17-compatible bytecode tooling, and an owner-authorized ATAK `5.6.0.CIV` SDK/devkit stored outside the repository. Create an untracked `local.properties` with SDK paths and owner-only signing-key references. Never commit it. Do not substitute the public 4.6 devkit, reverse-engineer the Play Store APK, or redistribute private SDK material.
 
 Run only the allowlisted wrapper task:
 
@@ -38,15 +47,17 @@ The guarded Society build surface uses `plugin_build(project_path, task=assemble
 
 ## Install
 
-Installation is deliberately outside this repository's automated workflow. After independently verifying the APK hash and signer, an authorized operator may install it using their normal ATAK-CIV plugin process. The portable source is derived from the public ATAK-CIV 4.6.0.5 template, but no binary compatibility claim is made until it is built and tested with the authorized matching 5.6.0.CIV plugin SDK/devkit.
+Installation is deliberately outside this repository's automated workflow. After independently verifying the APK hash and signer, an authorized operator may install it using their normal ATAK-CIV plugin process. SDK compile compatibility is validated for Plugin API `5.6.0.CIV`; device/runtime compatibility must still be confirmed by a separately authorized installation test.
+
+Expected Android warnings are limited to the source-specific **Install unknown apps** prompt above and the standard package-installer confirmation. A Play Protect scan prompt may also appear depending on the phone's policy. HonkTAK must not be described as runtime-tested or fully installable until ATAK 5.6 accepts its standalone signing certificate and plugin registration during a separately authorized device test.
 
 ## Tests
 
 Host-side unit tests cover explicit one-shot share gating, no silent sends, CoT serialization/receive parsing, malformed/oversized/stale/range rejection, expiry, azimuth bounds, local-only construction, and FLOCKPOCALYPSE.
 
-## Removal / rollback
+## Uninstall / rollback
 
-Uninstall HonkTAK through the authorized ATAK/Android plugin-management flow, then restart ATAK. Removing the plugin clears its in-memory overlay on shutdown; its markers are never archived. To remove source, delete the local clone. To remove a GitHub release, delete the `v0.1.0` release and tag, then archive or delete the repository using the GitHub owner account.
+In ATAK, remove or disable HonkTAK from **Tool Manager** if that option is available. Then open Android **Settings → Apps → HonkTAK → Uninstall** and restart ATAK. Removing the plugin clears its in-memory overlay on shutdown; its markers are never archived. To roll back to v0.1.0, uninstall v0.2.0 and install the verified v0.1.0 release APK/source package only if it is compatible with the target ATAK build.
 
 ## License
 
