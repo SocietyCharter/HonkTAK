@@ -1,5 +1,5 @@
 buildscript {
-    ext.PLUGIN_VERSION = "0.2.0"
+    ext.PLUGIN_VERSION = "0.2.1"
     ext.ATAK_VERSION = "5.6.0"
 
     def readProperty = { File file, String key ->
@@ -84,6 +84,8 @@ android {
                 keyAlias privateProperties.getProperty('takDebugKeyAlias')
                 keyPassword signingPassword
             }
+        }
+        if (releaseSigningConfigured) {
             release {
                 storeFile file(privateProperties.getProperty('takReleaseKeyFile'))
                 storePassword privateProperties.getProperty('takReleaseKeyPassword')
@@ -136,6 +138,7 @@ android {
 }
 
 dependencies {
+    compileOnly files(privateProperties.getProperty('takSdkMainJar'))
     implementation fileTree(dir: 'libs', include: '*.jar')
     testImplementation 'junit:junit:4.13.2'
 }

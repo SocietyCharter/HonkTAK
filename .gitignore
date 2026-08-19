@@ -2,6 +2,7 @@
 .takdev/
 build/
 app/build/
+app/proguard-gradle*.txt
 local.properties
 *.jks
 *.keystore
