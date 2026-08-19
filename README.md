@@ -2,19 +2,21 @@
 
 ## Release status
 
-Public v0.1.x only. ATAK v5.6.0.12 Play Store rejected the withdrawn
-v0.2.0 debug-signed plugin because its signer was not trusted. v0.2.1 is a
-private, non-debuggable release candidate and must not be installed or
-published until the official TAK plugin signing/registration path and a
-separately authorized phone runtime test pass.
+This branch contains the v0.2.6 source candidate. Public `main` and the
+immutable v0.1.0 tag remain unchanged until on-device gesture validation and
+project acceptance pass. No v0.2.x APK is published from this branch.
 
-Build target: **ATAK v5.6.0.12 Play Store**, Plugin API **5.6.0.CIV**,
-Android API **36**. HonkTAK needs no server or configuration for local markers.
-**SHARE TO TEAM** uses ATAK's existing TAK connection; when ATAK is
-disconnected, HonkTAK states that nothing was saved or sent and performs no
+The validated developer path is **Developer ATAK 5.6.0.CIV Debug** on Android
+API 36. Retail/Play Store ATAK rejects the SDK development signer, so retail
+plugin trust remains unresolved. HonkTAK needs no separate server or
+configuration for local markers. **SHARE TO TEAM** uses ATAK's existing TAK
+connection; when ATAK is disconnected, HonkTAK reports failure and performs no
 silent retry.
 
-HonkTAK is a clearly labeled joke plugin for ATAK-CIV. v0.2.0 portable source adds user-entered camera-location observations with separate **SAVE LOCALLY** and **SHARE TO TEAM** actions. Sightings use a custom goose icon and **Unidentified Waterfowl** label; they never use friendly, hostile, or other affiliation symbology.
+HonkTAK maps user-observed camera locations with separate **SAVE LOCALLY** and
+**SHARE TO TEAM** actions. Sightings use a custom goose icon and **Unidentified
+Waterfowl** label; they never use friendly, hostile, or other affiliation
+symbology.
 
 ![HonkTAK local overlay mockup](docs/mockup.svg)
 
@@ -26,6 +28,12 @@ HonkTAK does not access camera feeds, discover devices, scan Wi-Fi/Bluetooth, pe
 
 ## Features
 
+- Gesture placement: press **REPORT HONK**, long-press the camera location on
+  the map, drag to aim the 45-degree coverage wedge, and release to return to
+  the observation form.
+- The drag sets true-bearing azimuth and a clamped 10–500 m range. Nothing is
+  persisted or transmitted until **SAVE LOCALLY** or **SHARE TO TEAM** is
+  pressed.
 - Four randomized local SITREPs.
 - `FLOCKPOCALYPSE` when three active sightings fall within 500 m of any active sighting.
 - Camera class, optional azimuth, confidence, status, bounded notes, observed time, and configurable expiry.
@@ -36,16 +44,32 @@ HonkTAK does not access camera feeds, discover devices, scan Wi-Fi/Bluetooth, pe
 
 This project was derived from the public `plugin-examples/plugintemplate` in [`deptofdefense/AndroidTacticalAssaultKit-CIV`](https://github.com/deptofdefense/AndroidTacticalAssaultKit-CIV) at commit `889eee292c43d3d2eafdd1f2fbf378ad5cd89ecc`, tag `4.6.0.5`, dated 2024-10-18. Compatibility validation additionally used an authorized ATAK 5.6.0 CIV SDK supplied by the project owner; that SDK is not redistributable and is not included. No TAK.gov SDK, UAS Tool artifact, private package, credential, or signing key is included in this repository.
 
+## Use
+
+1. Press **REPORT HONK** to enter exclusive map-placement mode.
+2. Long-press the desired camera location, keep holding, and drag to aim the
+   live coverage wedge.
+3. Release to finalize the pending anchor, azimuth, range, and 45-degree FOV.
+4. Complete the form, then choose **SAVE LOCALLY** or explicitly choose
+   **SHARE TO TEAM**. **CANCEL PLACEMENT** restores normal map interaction.
+
+Local observations and their wedges expire together. Incoming validated
+HonkTAK CoT recreates the same wedge. Older HonkTAK events without range/FOV
+fields use bounded defaults.
+
 ## Build status
 
-The target is ATAK `v5.6.0.12`, source identifier `9c9a5897`, Play Store build `1769863102`, requiring Plugin API `5.6.0.CIV` on Android API 36. The guarded offline build compiles against the authorized 5.6.0 CIV SDK and declares `com.atakmap.app@5.6.0.CIV`. Runtime loading on Jesse's phone remains untested because this workflow never installs or alters a device.
+The source declares Plugin API `5.6.0.CIV` and was compiled through the
+authorized Developer ATAK 5.6 SDK debug path. Host tests and guarded build-time
+inspection pass. Gesture execution on a device is not yet accepted. Retail
+ATAK signer trust is unresolved and is not claimed by this source branch.
 
 Build prerequisites are Android SDK 36, Java 17-compatible bytecode tooling, and an owner-authorized ATAK `5.6.0.CIV` SDK/devkit stored outside the repository. Create an untracked `local.properties` with SDK paths and owner-only signing-key references. Never commit it. Do not substitute the public 4.6 devkit, reverse-engineer the Play Store APK, or redistribute private SDK material.
 
-Run only the allowlisted wrapper task:
+Run only the allowlisted wrapper task for the developer build:
 
 ```text
-./gradlew assembleDebug
+./gradlew assembleCivDebug
 ```
 
 The guarded Society build surface uses `plugin_build(project_path, task=assembleDebug)` and does not install the result.
@@ -58,7 +82,13 @@ Expected Android warnings are limited to the source-specific **Install unknown a
 
 ## Tests
 
-Host-side unit tests cover explicit one-shot share gating, no silent sends, CoT serialization/receive parsing, malformed/oversized/stale/range rejection, expiry, azimuth bounds, local-only construction, and FLOCKPOCALYPSE.
+Host-side unit tests cover explicit one-shot share gating, no silent sends, CoT
+serialization/receive parsing, malformed/oversized/stale/range rejection,
+expiry, azimuth and placement range/FOV bounds, listener-session state,
+backward-compatible wedge fields, local-only construction, and FLOCKPOCALYPSE.
+The v0.2.6 evidence scope is 18 passing JVM tests plus a guarded `civDebug`
+build, API/signer/permission inspection, and loader-descriptor comparison.
+On-device gesture behavior remains outside that evidence.
 
 ## Uninstall / rollback
 

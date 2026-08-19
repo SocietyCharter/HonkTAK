@@ -1,39 +1,42 @@
-# HonkTAK v0.2.1 release candidate — not for installation
+# HonkTAK v0.2.6 source candidate
 
-ATAK v5.6.0.12 Play Store rejected the v0.2.0 debug-signed plugin because its
-certificate is not trusted by ATAK's release-plugin signer policy. APK signature
-integrity passed, but ATAK plugin trust failed. v0.2.1 is a non-debuggable CIV
-release candidate only; do not publish or install it until an official TAK
-Product Center signing/registration path is completed and Jesse confirms that
-ATAK loads it.
+This is a source-only candidate branch. Do not publish an APK, create a tag or
+release, or merge it to `main` until the gesture workflow passes Jesse's
+on-device validation and the project acceptance gate is satisfied.
 
-# Install HonkTAK v0.2.0 on a phone
+## Usage
 
-1. Download `HonkTAK-v0.2.0-ATAK-5.6.0-CIV.apk` from the official GitHub Release.
-2. Tap the APK in browser downloads or the Files app.
-3. If prompted, open Android **Settings** and allow **Install unknown apps** for that browser/file manager, then return to the installer.
-4. Tap **Install**, open ATAK, then select **HonkTAK** from ATAK's **Tools** menu; use **Tool Manager** to enable/add it if it is not visible.
+1. Press **REPORT HONK**.
+2. Long-press the desired camera location, drag to aim the live wedge, and
+   release.
+3. Complete the observation form.
+4. Choose **SAVE LOCALLY** or explicitly choose **SHARE TO TEAM**.
 
-Exact target: **ATAK v5.6.0.12 Play Store**, Plugin API **5.6.0.CIV**, Android API **36**. Local markers require no HonkTAK server or configuration. Team sharing uses ATAK's existing connection, reports disconnected state, and never retries silently. Android may show the standard unknown-app source warning, install confirmation, and a Play Protect scan prompt. ATAK signer/plugin trust acceptance still requires a separately authorized device test; no device was touched during release preparation.
+Placement uses the gesture anchor, true-bearing azimuth, a clamped 10–500 m
+range, and a 45-degree initial FOV. Cancel, dropdown close, release, and plugin
+dispose restore ATAK map listeners/tool state. The preview is local-only and
+never-CoT; persistence or transmission requires an explicit final action.
 
-# v0.1.0 — Initial public source release
+## Changes since v0.1.0
 
-- Adds the local-only HonkTAK Sightings overlay and REPORT HONK action.
-- Adds custom non-military goose marker, local SITREPs, automatic expiry, and FLOCKPOCALYPSE threshold logic.
-- Audio defaults off; no audio asset is bundled.
-- Adds unit tests and explicit no-CoT/no-mission-package/no-UAS boundaries.
+- Adds bounded camera-observation fields and explicit local/share actions.
+- Adds validated HonkTAK CoT send/receive with range and FOV metadata.
+- Adds gesture placement and live `SensorFOV` coverage preview.
+- Expires observation markers and wedges together.
+- Preserves backward compatibility for events without range/FOV metadata.
+- Preserves randomized goose SITREPs and FLOCKPOCALYPSE behavior.
 
-Artifact policy: attach an APK only after an allowlisted build succeeds from public inputs, its signing provenance is safe to disclose/distribute, manifest and compatibility validation pass, APK inspection passes, and SHA-256 is recorded. Otherwise this is a source-only release.
+## Evidence scope
 
-## v0.2.0
+- 18 host-side JVM tests passed.
+- Guarded `civDebug` build passed against the owner-authorized ATAK 5.6 SDK.
+- Plugin API `5.6.0.CIV`, zero permissions, SDK development signer, and loader
+  descriptor were inspected.
+- No device/emulator gesture execution is included in this evidence.
 
-- Adds a user-opened camera observation form and explicit location-source choice.
-- Adds separate local-save and visibly warned TAK-network share actions.
-- Adds bounded CoT serialization, inbound validation/rendering, and stale-time cleanup.
-- Adds explicit-share/no-silent-send, codec, malformed-input, bounds, expiry, and existing flock tests.
+## Compatibility limitation
 
-Target is ATAK `v5.6.0.12` / Plugin API `5.6.0.CIV`, Play Store build `1769863102`. The guarded offline SDK build, manifest compatibility validation, APK inspection, signature verification, CoT validation, and host tests pass. Runtime installation remains separately approval-routed and was not performed. The authorized SDK and signing material are excluded from the repository and release.
-
-Release assets must contain exactly one user-facing APK named `HonkTAK-v0.2.0-ATAK-5.6.0-CIV.apk` plus `SHA256SUMS`. Ordinary installation requires no SDK, Android Studio, Gradle, ADB, source build, server, or command line.
-
-Uninstall from ATAK **Tool Manager** when available, then Android **Settings → Apps → HonkTAK → Uninstall**, and restart ATAK. Local removal does not transmit a remote delete.
+The known-loading development configuration is Developer ATAK 5.6.0.CIV Debug
+with its matching SDK development signer. Retail/Play Store ATAK trust is
+unresolved and must not be claimed. Earlier v0.2.x APKs were rejected or
+private test artifacts and are not release assets.
