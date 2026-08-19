@@ -16,7 +16,7 @@ Exact target: **ATAK v5.6.0.12 Play Store**, Plugin API **5.6.0.CIV**, Android A
 
 Artifact policy: attach an APK only after an allowlisted build succeeds from public inputs, its signing provenance is safe to disclose/distribute, manifest and compatibility validation pass, APK inspection passes, and SHA-256 is recorded. Otherwise this is a source-only release.
 
-## v0.2.0 — pending, not published
+## v0.2.0
 
 - Adds a user-opened camera observation form and explicit location-source choice.
 - Adds separate local-save and visibly warned TAK-network share actions.

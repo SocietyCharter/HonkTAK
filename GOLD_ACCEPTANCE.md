@@ -4,8 +4,8 @@ Job: `honktak-v020-20260818`
 
 ## Review result
 
-- t004 ATAK 5.6 build configuration: Grey PASS after a bounded correction packet preserved and resolved the earlier non-reproducible finding.
-- t005 receiver adapter: Grey PASS across a lossless two-part split covering all 173 lines.
+- t004 ATAK 5.6 build configuration: Grey PASS at cycle 5 using a bounded final configuration packet.
+- t005 receiver adapter: Grey PASS at cycle 3 over the complete 173-line source.
 - t006 ATAK lifecycle adapter: Grey PASS.
 
 No Grey waiver was used.
