@@ -3,7 +3,7 @@ package com.societycharter.honktak.plugin;
 import android.content.Context;
 import com.atak.plugins.impl.AbstractPluginTool;
 import com.societycharter.honktak.HonkTakDropDownReceiver;
-import gov.tak.api.util.Disposable;
+import com.atakmap.util.Disposable;
 
 public final class HonkTakTool extends AbstractPluginTool implements Disposable {
     public HonkTakTool(Context context) {

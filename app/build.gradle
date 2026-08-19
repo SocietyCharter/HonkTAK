@@ -1,144 +1,34 @@
-buildscript {
-    ext.PLUGIN_VERSION = "0.2.0"
-    ext.ATAK_VERSION = "5.6.0"
-
-    def readProperty = { File file, String key ->
-        if (!file.isFile() || !file.canRead()) return null
-        def properties = new Properties()
-        file.withReader { properties.load(it) }
-        properties.get(key)
-    }
-    def propertyOr = { String name, defaultValue ->
-        project.properties[name] ?: readProperty(project.rootProject.file('local.properties'), name) ?: defaultValue
-    }
-
-    ext.isDevKitEnabled = { false }
-    ext.takrepoUrl = 'http://127.0.0.1/'
-    ext.takrepoUser = 'disabled'
-    ext.takrepoPassword = 'disabled'
-    ext.takdevPlugin = propertyOr('takdev.plugin', '')
-    if (!takdevPlugin) {
-        throw new GradleException('Authorized ATAK 5.6 takdev.plugin path must be configured in local.properties.')
-    }
-
-    repositories {
-        google()
-        mavenCentral()
-        mavenLocal()
-        maven { url 'https://jitpack.io' }
-    }
-    dependencies {
-        classpath files(takdevPlugin)
-    }
-}
-
-plugins {
-    id("com.android.application")
-}
+apply plugin: 'com.android.application'
 apply plugin: 'atak-takdev-plugin'
 
-def privateProperties = new Properties()
-def privatePropertiesFile = project.rootProject.file('local.properties')
-if (privatePropertiesFile.isFile()) privatePropertiesFile.withReader { privateProperties.load(it) }
-def signingConfigured = ['takDebugKeyFile', 'takDebugKeyPasswordFile', 'takDebugKeyAlias']
-        .every { privateProperties.getProperty(it) }
-def signingPassword = signingConfigured
-        ? file(privateProperties.getProperty('takDebugKeyPasswordFile')).getText('UTF-8').trim()
-        : null
-def releaseSigningConfigured = ['takReleaseKeyFile', 'takReleaseKeyPassword', 'takReleaseKeyAlias']
-        .every { privateProperties.getProperty(it) }
-def apkTaskRequested = gradle.startParameter.taskNames.any {
-    def name = it.tokenize(':').last().toLowerCase()
-    name.startsWith('assemble') || name.startsWith('bundle') || name.startsWith('package') || name.startsWith('install')
-}
-def releaseTaskRequested = gradle.startParameter.taskNames.any {
-    it.tokenize(':').last().toLowerCase().contains('release')
-}
-if (apkTaskRequested && !signingConfigured && !releaseTaskRequested) {
-    throw new GradleException('Private HonkTAK signing configuration is required for APK tasks.')
-}
-if (releaseTaskRequested && !releaseSigningConfigured) {
-    throw new GradleException('Authorized ATAK release signing configuration is required for release APK tasks.')
-}
-
 android {
-    compileSdk 36
-    namespace 'com.societycharter.honktak.plugin'
-
-    buildFeatures { buildConfig = true }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-    bundle { storeArchive { enable = false } }
-    packagingOptions {
-        resources { excludes += ['META-INF/INDEX.LIST'] }
-        jniLibs { useLegacyPackaging = true }
-    }
-
+    compileSdkVersion 26
+    buildToolsVersion "30.0.2"
+    lintOptions { checkReleaseBuilds true; abortOnError true }
     signingConfigs {
-        if (signingConfigured) {
-            debug {
-                storeFile file(privateProperties.getProperty('takDebugKeyFile'))
-                storePassword signingPassword
-                keyAlias privateProperties.getProperty('takDebugKeyAlias')
-                keyPassword signingPassword
-            }
-        }
-        if (releaseSigningConfigured) {
-            release {
-                storeFile file(privateProperties.getProperty('takReleaseKeyFile'))
-                storePassword privateProperties.getProperty('takReleaseKeyPassword')
-                keyAlias privateProperties.getProperty('takReleaseKeyAlias')
-                keyPassword privateProperties.getProperty('takReleaseKeyPassword')
-            }
-        }
-    }
-    buildTypes {
         debug {
-            debuggable true
-            matchingFallbacks = ['sdk']
-            if (signingConfigured) signingConfig signingConfigs.debug
-        }
-        release {
-            debuggable false
-            minifyEnabled true
-            proguardFiles 'proguard-gradle.txt', 'proguard-gradle-repackage.txt'
-            if (releaseSigningConfigured) signingConfig signingConfigs.release
-            matchingFallbacks = ['odk']
+            def p = new Properties()
+            def f = project.rootProject.file('local.properties')
+            if (f.isFile()) f.withReader { p.load(it) }
+            if (!p.getProperty('takDebugKeyFile')) throw new GradleException('No local debug signing key configured; no key is distributed with HonkTAK.')
+            storeFile file(p.getProperty('takDebugKeyFile'))
+            storePassword p.getProperty('takDebugKeyFilePassword')
+            keyAlias p.getProperty('takDebugKeyAlias')
+            keyPassword p.getProperty('takDebugKeyPassword')
         }
     }
-    flavorDimensions 'application'
-    productFlavors {
-        civ {
-            dimension 'application'
-            matchingFallbacks = ['civ']
-            manifestPlaceholders = [atakApiVersion: "com.atakmap.app@${ATAK_VERSION}.CIV"]
-        }
-    }
+    buildTypes { debug { debuggable true; matchingFallbacks = ['sdk'] } }
+    flavorDimensions "application"
+    productFlavors { civ { dimension "application"; manifestPlaceholders = [atakApiVersion: "com.atakmap.app@" + ATAK_VERSION + ".CIV"] } }
     sourceSets {
         main {
-            setProperty('archivesBaseName', "ATAK-Plugin-${rootProject.name}-${PLUGIN_VERSION}-${getVersionName()}-${ATAK_VERSION}")
+            setProperty('archivesBaseName', 'ATAK-Plugin-' + rootProject.name + '-' + PLUGIN_VERSION + '-' + getVersionName() + '-' + ATAK_VERSION)
             defaultConfig.versionCode = getVersionCode()
-            defaultConfig.versionName = "${PLUGIN_VERSION} (${getVersionName()}) - [${ATAK_VERSION}]"
+            defaultConfig.versionName = PLUGIN_VERSION + ' (' + getVersionName() + ') - [' + ATAK_VERSION + ']'
         }
         debug.setRoot('build-types/debug')
-        release.setRoot('build-types/release')
     }
-    defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 34
-        ndk { abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86' }
-    }
-    lint {
-        abortOnError true
-        checkReleaseBuilds true
-    }
+    defaultConfig { minSdkVersion 21 }
     testOptions { unitTests.returnDefaultValues = true }
 }
-
-dependencies {
-    compileOnly files(privateProperties.getProperty('takSdkMainJar'))
-    implementation fileTree(dir: 'libs', include: '*.jar')
-    testImplementation 'junit:junit:4.13.2'
-}
+dependencies { testImplementation 'junit:junit:4.13.2' }

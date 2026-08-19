@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content">
- <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="12dp">
-  <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="HonkTAK — Camera Goose Mapper" android:textStyle="bold" />
-  <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="JOKE PLUGIN. Sharing is explicit and uses your currently connected TAK network." />
-  <Button android:id="@+id/report_honk" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="REPORT HONK" />
-  <LinearLayout android:id="@+id/observation_form" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
-   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Location source"/><Spinner android:id="@+id/location_source" android:layout_width="match_parent" android:layout_height="wrap_content"/>
-   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Camera class"/><Spinner android:id="@+id/camera_class" android:layout_width="match_parent" android:layout_height="wrap_content"/>
-   <EditText android:id="@+id/azimuth" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Optional facing azimuth 0–359" android:inputType="number"/>
-   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Confidence"/><Spinner android:id="@+id/confidence" android:layout_width="match_parent" android:layout_height="wrap_content"/>
-   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Status"/><Spinner android:id="@+id/camera_status" android:layout_width="match_parent" android:layout_height="wrap_content"/>
-   <EditText android:id="@+id/notes" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Short notes (160 characters max)" android:maxLength="160"/>
-   <EditText android:id="@+id/expiry_minutes" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Expiry minutes (1–10080)" android:inputType="number" android:text="30"/>
-   <Button android:id="@+id/save_local" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="SAVE LOCALLY"/>
-   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SHARE TO TEAM sends this marker off-device through the currently connected TAK network. It never sends automatically or in the background." android:textStyle="bold"/>
-   <Button android:id="@+id/share_team" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="SHARE TO TEAM — SEND THROUGH TAK NETWORK"/>
-  </LinearLayout>
-  <TextView android:id="@+id/status" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="No camera observations currently reported."/>
- </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="12dp">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="HonkTAK — Tactical Goose Awareness System" android:textStyle="bold" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="JOKE PLUGIN — local-only overlay; not operational reporting." />
+        <Button android:id="@+id/report_honk" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="REPORT HONK" />
+        <TextView android:id="@+id/status" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="No waterfowl currently reported." />
+        <CheckBox android:id="@+id/audio_enabled" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Enable optional honk sound (audio asset not bundled in v0.1.0)" android:enabled="false" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Marker expiry (minutes, 1–1440)" />
+        <EditText android:id="@+id/expiry_minutes" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:text="30" />
+    </LinearLayout>
 </ScrollView>

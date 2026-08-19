@@ -1,7 +1,27 @@
-plugins {
-    id("com.android.application") version "8.13.0" apply false
+buildscript {
+    ext.PLUGIN_VERSION = "0.1.0"
+    ext.ATAK_VERSION = "4.6.0"
+    def readProperty = { File file, String key ->
+        if (!file.isFile() || !file.canRead()) return null
+        def properties = new Properties()
+        file.withReader { properties.load(it) }
+        properties.get(key)
+    }
+    def propertyOr = { String name, defaultValue ->
+        project.properties[name] ?: readProperty(project.rootProject.file('local.properties'), name) ?: defaultValue
+    }
+    ext.takdevPlugin = propertyOr('takdev.plugin', "${rootDir}/../AndroidTacticalAssaultKit-CIV/atak-gradle-takdev/build/libs/atak-gradle-takdev-2.4.1.jar")
+    // Required by the public takdev plugin; forced offline so no authenticated TAK repository is used.
+    ext.isDevKitEnabled = { false }
+    ext.takrepoUrl = 'http://127.0.0.1/'
+    ext.takrepoUser = 'disabled'
+    ext.takrepoPassword = 'disabled'
+    repositories {
+        google(); mavenCentral(); mavenLocal(); maven { url 'https://jitpack.io' }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath files(takdevPlugin)
+    }
 }
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
+allprojects { repositories { mavenCentral(); google(); mavenLocal(); maven { url 'https://jitpack.io' } } }
