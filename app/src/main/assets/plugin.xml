@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugin>
-    <extension type="transapps.maps.plugin.lifecycle.Lifecycle"
+    <extension type="gov.tak.api.plugin.IPlugin"
         impl="com.societycharter.honktak.plugin.HonkTakLifecycle" singleton="true" />
-    <extension type="transapps.maps.plugin.tool.ToolDescriptor"
-        impl="com.societycharter.honktak.plugin.HonkTakTool" singleton="true" />
 </plugin>

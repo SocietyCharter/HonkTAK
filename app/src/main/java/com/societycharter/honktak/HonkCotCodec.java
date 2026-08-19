@@ -28,6 +28,7 @@ public final class HonkCotCodec {
             + DETAIL_ELEMENT + " schema=\"1\" class=\"" + o.cameraClass.name().toLowerCase()
             + "\" azimuth=\"" + azimuth + "\" confidence=\"" + o.confidence.name().toLowerCase()
             + "\" status=\"" + o.status.name().toLowerCase() + "\" notes=\"" + esc(o.notes)
+            + "\" range_m=\"" + o.rangeMeters + "\" fov_deg=\"" + o.fovDegrees
             + "\" observed_at=\"" + time(o.observedAtMs) + "\"/></detail></event>";
     }
 
@@ -53,9 +54,11 @@ public final class HonkCotCodec {
             long observed = millis(detail.getAttribute("observed_at"));
             long stale = millis(event.getAttribute("stale"));
             Integer azimuth = detail.getAttribute("azimuth").isEmpty() ? null : Integer.valueOf(detail.getAttribute("azimuth"));
+            double range = optionalDouble(detail, "range_m", PlacementMath.DEFAULT_RANGE_METERS);
+            double fov = optionalDouble(detail, "fov_deg", PlacementMath.DEFAULT_FOV_DEGREES);
             CameraObservation o = new CameraObservation(event.getAttribute("uid"),
                 Double.parseDouble(point.getAttribute("lat")), Double.parseDouble(point.getAttribute("lon")),
-                CameraObservation.CameraClass.valueOf(detail.getAttribute("class").toUpperCase()), azimuth,
+                CameraObservation.CameraClass.valueOf(detail.getAttribute("class").toUpperCase()), azimuth, range, fov,
                 CameraObservation.Confidence.valueOf(detail.getAttribute("confidence").toUpperCase()),
                 CameraObservation.Status.valueOf(detail.getAttribute("status").toUpperCase()),
                 detail.getAttribute("notes"), observed, stale);
@@ -68,5 +71,9 @@ public final class HonkCotCodec {
     private static SimpleDateFormat formatter() { SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US); f.setTimeZone(TimeZone.getTimeZone("UTC")); f.setLenient(false); return f; }
     private static long millis(String value) { try { return formatter().parse(value).getTime(); } catch (ParseException e) { throw new IllegalArgumentException("invalid time", e); } }
     private static String time(long ms) { return formatter().format(new Date(ms)); }
+    private static double optionalDouble(Element element, String name, double fallback) {
+        String value = element.getAttribute(name);
+        return value.isEmpty() ? fallback : Double.parseDouble(value);
+    }
     private static String esc(String s) { return s.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(">", "&gt;"); }
 }

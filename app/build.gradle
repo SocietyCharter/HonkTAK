@@ -1,5 +1,5 @@
 buildscript {
-    ext.PLUGIN_VERSION = "0.2.1"
+    ext.PLUGIN_VERSION = "0.2.6"
     ext.ATAK_VERSION = "5.6.0"
 
     def readProperty = { File file, String key ->
@@ -50,7 +50,8 @@ if (privatePropertiesFile.isFile()) privatePropertiesFile.withReader { privatePr
 def signingConfigured = ['takDebugKeyFile', 'takDebugKeyPasswordFile', 'takDebugKeyAlias']
         .every { privateProperties.getProperty(it) }
 def signingPassword = signingConfigured
-        ? file(privateProperties.getProperty('takDebugKeyPasswordFile')).getText('UTF-8').trim()
+        ? (privateProperties.getProperty('takDebugKeyPassword')
+            ?: file(privateProperties.getProperty('takDebugKeyPasswordFile')).getText('UTF-8').trim())
         : null
 def releaseSigningConfigured = ['takReleaseKeyFile', 'takReleaseKeyPassword', 'takReleaseKeyAlias']
         .every { privateProperties.getProperty(it) }
