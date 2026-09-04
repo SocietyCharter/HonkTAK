@@ -2,6 +2,6 @@
 
 Report vulnerabilities through a private GitHub security advisory. Do not include operational data, credentials, TAK.gov material, signing keys, proprietary packages, or real mission data in reports.
 
-HonkTAK has an intentional hard boundary: local ephemeral map items only. A finding that enables CoT transmission, persistence/mission-package writes, UAS/device control, or mutation of mission data is considered critical.
+HonkTAK permits only an explicit foreground **SHARE TO TEAM** action through ATAK's connected TAK network. Its separate foreground Overpass import performs bounded reads only after visible user action. Any automatic/background transmission, unauthorized non-TAK transport, malformed inbound acceptance, mission-package write, UAS/device control, upstream OSM/DeFlock mutation, or real mission-data mutation is considered critical.
 
-Supported version: `0.1.x`. No plugin build is trusted unless its source commit, signer, and SHA-256 are independently verified.
+Supported public release: `0.1.x`. Public `main` also carries v0.2.12 development source, but no v0.2.x APK is a supported public release. Earlier v0.2.x APKs failed retail ATAK signer trust or were private development artifacts. No plugin build is trusted unless its source commit, target ATAK build, signer fingerprint, and SHA-256 are independently verified.

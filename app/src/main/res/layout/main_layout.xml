@@ -1,12 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="12dp">
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="HonkTAK — Tactical Goose Awareness System" android:textStyle="bold" />
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="JOKE PLUGIN — local-only overlay; not operational reporting." />
-        <Button android:id="@+id/report_honk" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="REPORT HONK" />
-        <TextView android:id="@+id/status" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="No waterfowl currently reported." />
-        <CheckBox android:id="@+id/audio_enabled" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Enable optional honk sound (audio asset not bundled in v0.1.0)" android:enabled="false" />
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Marker expiry (minutes, 1–1440)" />
-        <EditText android:id="@+id/expiry_minutes" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" android:text="30" />
-    </LinearLayout>
+ <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="12dp">
+  <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="HonkTAK — Camera Goose Mapper" android:textStyle="bold" />
+  <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Manually map camera observations. Sharing occurs only when you press SHARE TO TEAM and uses your currently connected TAK network." />
+  <Button android:id="@+id/report_honk" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="REPORT HONK — PLACE ON MAP" />
+  <Button android:id="@+id/load_cameras" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="LOAD CAMERAS IN VIEW" />
+  <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Imports viewport-bounded OSM ALPR nodes through DeFlock Overpass. Tap an imported goose or its FOV wedge to select it; the plugin panel will open with MARK DEFEATED. © OpenStreetMap contributors. Local only unless explicitly shared." android:textStyle="bold" />
+  <TextView android:id="@+id/import_selection" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="No imported goose selected." />
+  <Button android:id="@+id/mark_taken_down" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="MARK DEFEATED — LOCAL ONLY" android:visibility="gone" />
+  <Button android:id="@+id/mark_active" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="MARK ACTIVE" android:visibility="gone" />
+  <Button android:id="@+id/cancel_placement" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="CANCEL PLACEMENT" android:visibility="gone" />
+  <LinearLayout android:id="@+id/observation_form" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Map location and camera aim are set by REPORT HONK placement."/>
+   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Camera class"/><Spinner android:id="@+id/camera_class" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+   <EditText android:id="@+id/azimuth" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Facing azimuth from map gesture" android:inputType="number" android:enabled="false"/>
+   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Confidence"/><Spinner android:id="@+id/confidence" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Status"/><Spinner android:id="@+id/camera_status" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+   <EditText android:id="@+id/notes" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Short notes (160 characters max)" android:maxLength="160"/>
+   <CheckBox android:id="@+id/temporary_marker" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Temporary marker (expires)" android:checked="false"/>
+   <LinearLayout android:id="@+id/expiry_controls" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Temporary expiration"/>
+    <EditText android:id="@+id/expiry_minutes" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Expiry minutes (1–10080)" android:inputType="number" android:text="30" android:enabled="false"/>
+   </LinearLayout>
+   <Button android:id="@+id/save_local" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="SAVE LOCALLY"/>
+   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SHARE TO TEAM sends this marker off-device through the currently connected TAK network. It never sends automatically or in the background." android:textStyle="bold"/>
+   <Button android:id="@+id/share_team" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="SHARE TO TEAM — SEND THROUGH TAK NETWORK"/>
+   <Button android:id="@+id/submit_deflock" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="SUBMIT TO DEFLOCK — OSM PATH PENDING" android:enabled="false"/>
+  </LinearLayout>
+  <TextView android:id="@+id/status" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="No camera observations currently reported."/>
+ </LinearLayout>
 </ScrollView>

@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">HonkTAK</string>
-    <string name="app_desc">Tactical Goose Awareness System — a local-only joke plugin, not an operational alerting tool.</string>
+    <string name="app_desc">Tactical Goose Awareness System for manual camera-observation mapping and explicit TAK-network sharing.</string>
 </resources>

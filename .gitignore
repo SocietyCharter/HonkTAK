@@ -1,6 +1,8 @@
 .gradle/
+.takdev/
 build/
 app/build/
+app/proguard-gradle*.txt
 local.properties
 *.jks
 *.keystore
@@ -9,3 +11,4 @@ local.properties
 *.key
 *.apk
 !docs/mockup.png
+/espresso
