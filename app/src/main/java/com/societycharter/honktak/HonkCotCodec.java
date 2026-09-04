@@ -16,23 +16,35 @@ public final class HonkCotCodec {
     public static final String COT_TYPE = "b-m-p-s-p-i-honktak-camera";
     public static final String DETAIL_ELEMENT = "honktak_camera";
     public static final int MAX_XML_BYTES = 8192;
+    private static final long PERMANENT_TRANSPORT_LIFETIME_MS = 7L * 24 * 60 * 60 * 1000;
 
     private HonkCotCodec() { }
 
     public static String serialize(CameraObservation o) {
         String azimuth = o.azimuth == null ? "" : Integer.toString(o.azimuth);
+        long transportStale = o.isPermanent()
+                ? o.observedAtMs + PERMANENT_TRANSPORT_LIFETIME_MS : o.staleAtMs;
         return "<event version=\"2.0\" uid=\"" + esc(o.uid) + "\" type=\"" + COT_TYPE
             + "\" time=\"" + time(o.observedAtMs) + "\" start=\"" + time(o.observedAtMs)
-            + "\" stale=\"" + time(o.staleAtMs) + "\" how=\"h-g-i-g-o\"><point lat=\""
+            + "\" stale=\"" + time(transportStale) + "\" how=\"h-g-i-g-o\"><point lat=\""
             + o.latitude + "\" lon=\"" + o.longitude + "\" hae=\"0\" ce=\"9999999\" le=\"9999999\"/><detail><contact callsign=\"Unidentified Waterfowl\"/><"
             + DETAIL_ELEMENT + " schema=\"1\" class=\"" + o.cameraClass.name().toLowerCase()
             + "\" azimuth=\"" + azimuth + "\" confidence=\"" + o.confidence.name().toLowerCase()
             + "\" status=\"" + o.status.name().toLowerCase() + "\" notes=\"" + esc(o.notes)
             + "\" range_m=\"" + o.rangeMeters + "\" fov_deg=\"" + o.fovDegrees
+            + "\" lifetime=\"" + (o.isPermanent() ? "permanent" : "temporary")
             + "\" observed_at=\"" + time(o.observedAtMs) + "\"/></detail></event>";
     }
 
     public static CameraObservation parse(String xml, long nowMs) {
+        return parse(xml, nowMs, true);
+    }
+
+    public static CameraObservation parsePersisted(String xml, long nowMs) {
+        return parse(xml, nowMs, false);
+    }
+
+    private static CameraObservation parse(String xml, long nowMs, boolean enforceTransportStale) {
         if (xml == null || xml.getBytes(java.nio.charset.StandardCharsets.UTF_8).length > MAX_XML_BYTES) throw new IllegalArgumentException("oversized CoT");
         try {
             DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
@@ -52,7 +64,10 @@ public final class HonkCotCodec {
             Element detail = (Element) event.getElementsByTagName(DETAIL_ELEMENT).item(0);
             if (point == null || detail == null || !"1".equals(detail.getAttribute("schema"))) throw new IllegalArgumentException("missing detail");
             long observed = millis(detail.getAttribute("observed_at"));
-            long stale = millis(event.getAttribute("stale"));
+            long transportStale = millis(event.getAttribute("stale"));
+            String lifetime = detail.getAttribute("lifetime");
+            long stale = "permanent".equals(lifetime)
+                    ? CameraObservation.PERMANENT : transportStale;
             Integer azimuth = detail.getAttribute("azimuth").isEmpty() ? null : Integer.valueOf(detail.getAttribute("azimuth"));
             double range = optionalDouble(detail, "range_m", PlacementMath.DEFAULT_RANGE_METERS);
             double fov = optionalDouble(detail, "fov_deg", PlacementMath.DEFAULT_FOV_DEGREES);
@@ -62,7 +77,9 @@ public final class HonkCotCodec {
                 CameraObservation.Confidence.valueOf(detail.getAttribute("confidence").toUpperCase()),
                 CameraObservation.Status.valueOf(detail.getAttribute("status").toUpperCase()),
                 detail.getAttribute("notes"), observed, stale);
-            if (o.isStale(nowMs)) throw new IllegalArgumentException("stale CoT");
+            if ((enforceTransportStale && nowMs >= transportStale) || o.isStale(nowMs)) {
+                throw new IllegalArgumentException("stale CoT");
+            }
             return o;
         } catch (IllegalArgumentException e) { throw e; }
         catch (Exception e) { throw new IllegalArgumentException("malformed CoT", e); }

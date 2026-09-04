@@ -2,6 +2,7 @@ package com.societycharter.honktak;
 
 /** Immutable bounded camera-location observation with no personal or device identifiers. */
 public final class CameraObservation {
+    public static final long PERMANENT = 0L;
     public enum CameraClass { FIXED, PTZ, DOORBELL, LICENSE_PLATE_READER, UNKNOWN }
     public enum Confidence { LOW, MEDIUM, HIGH }
     public enum Status { ACTIVE, INACTIVE, UNKNOWN }
@@ -37,14 +38,19 @@ public final class CameraObservation {
                 || rangeMeters > PlacementMath.MAX_RANGE_METERS) throw new IllegalArgumentException("invalid range");
         if (!Double.isFinite(fovDegrees) || fovDegrees < 1 || fovDegrees > 120) throw new IllegalArgumentException("invalid fov");
         String clean = sanitize(notes, 160);
-        if (observedAtMs <= 0 || staleAtMs <= observedAtMs || staleAtMs - observedAtMs > 7L * 24 * 60 * 60 * 1000) throw new IllegalArgumentException("invalid time range");
+        if (observedAtMs <= 0 || (staleAtMs != PERMANENT
+                && (staleAtMs <= observedAtMs
+                || staleAtMs - observedAtMs > 7L * 24 * 60 * 60 * 1000))) {
+            throw new IllegalArgumentException("invalid time range");
+        }
         this.uid = uid; this.latitude = latitude; this.longitude = longitude;
         this.cameraClass = cameraClass; this.azimuth = azimuth; this.rangeMeters = rangeMeters;
         this.fovDegrees = fovDegrees; this.confidence = confidence;
         this.status = status; this.notes = clean; this.observedAtMs = observedAtMs; this.staleAtMs = staleAtMs;
     }
 
-    public boolean isStale(long nowMs) { return nowMs >= staleAtMs; }
+    public boolean isPermanent() { return staleAtMs == PERMANENT; }
+    public boolean isStale(long nowMs) { return !isPermanent() && nowMs >= staleAtMs; }
 
     public static String sanitize(String value, int maxLength) {
         if (value == null) return "";

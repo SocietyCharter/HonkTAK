@@ -1,5 +1,5 @@
 buildscript {
-    ext.PLUGIN_VERSION = "0.2.6"
+    ext.PLUGIN_VERSION = "0.2.12"
     ext.ATAK_VERSION = "5.6.0"
 
     def readProperty = { File file, String key ->
@@ -149,6 +149,7 @@ dependencies {
     compileOnly files(privateProperties.getProperty('takSdkMainJar'))
     implementation fileTree(dir: 'libs', include: '*.jar')
     testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.json:json:20240303'
 }
 
 // Owner-supplied ATAK Espresso harness remains outside version control. The
