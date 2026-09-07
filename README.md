@@ -1,120 +1,171 @@
-# HonkTAK — Tactical Goose Awareness System
+# HonkTAK
 
-## Release status
+**Tactical Goose Awareness for ATAK.** Map observed cameras, visualize their
+coverage, import public ALPR camera locations in the current viewport, and
+optionally share a completed observation through ATAK's connected TAK network.
 
-Public `main` contains the latest v0.2.12 development source. The immutable
-v0.1.0 tag remains the latest broadly installable release; no v0.2.x APK is
-published because on-device validation and retail ATAK signer trust remain unresolved.
+<p align="center">
+  <img src="docs/interface-overview.svg" alt="HonkTAK map and control-panel overview" width="100%">
+  <br>
+  <sub>Illustrated from the current v0.2.12 controls and marker states.</sub>
+</p>
 
-The validated developer path is **Developer ATAK 5.6.0.CIV Debug** on Android
-API 36. Retail/Play Store ATAK rejects the SDK development signer, so retail
-plugin trust remains unresolved. HonkTAK needs no separate server or
-configuration for local markers. **SHARE TO TEAM** uses ATAK's existing TAK
-connection; when ATAK is disconnected, HonkTAK reports failure and performs no
-silent retry.
+> [!IMPORTANT]
+> Public `main` contains **v0.2.12 development source**. The v0.2.12 GitHub
+> release is a source-only prerelease with no APK asset. The validated build
+> path is Developer ATAK `5.6.0.CIV` Debug; retail/Play Store ATAK plugin trust
+> and on-device gesture behavior are not yet validated.
 
-HonkTAK maps user-observed camera locations with separate **SAVE LOCALLY** and
-**SHARE TO TEAM** actions. Sightings use a custom goose icon and **Unidentified
-Waterfowl** label; they never use friendly, hostile, or other affiliation
-symbology.
+## What it does
 
-![HonkTAK local overlay mockup](docs/mockup.svg)
+- Places an **Unidentified Waterfowl** marker with a live 45-degree camera
+  field-of-view wedge.
+- Captures camera class, direction, confidence, status, notes, and observation
+  time.
+- Saves observations locally by default, permanently unless **Temporary
+  marker** is explicitly selected.
+- Shares only after the user presses **SHARE TO TEAM**. There are no automatic
+  or background sends.
+- Loads up to 500 public OSM ALPR camera nodes in the visible map area through
+  a user-triggered, bounded Overpass request.
+- Lets users mark imported cameras **DEFEATED — LOCAL ONLY**, suppressing their
+  wedge and displaying a desaturated goose with a red X. **MARK ACTIVE** undoes
+  the local override.
+- Restores permanent local observations and imported-camera overrides when the
+  plugin reloads.
+- Reports `FLOCKPOCALYPSE` when at least three active sightings cluster within
+  500 meters.
 
-## Network behavior and safety boundary
+<p align="center">
+  <img src="docs/usage-flow.svg" alt="HonkTAK report, aim, save or share, and imported camera workflow" width="100%">
+</p>
 
-**SHARE TO TEAM sends the completed observation off-device through ATAK's currently connected TAK network.** It uses the public ATAK external CoT dispatcher—no direct sockets or alternate transport. Transmission occurs only after the user presses the visibly labeled share action; opening the form and saving locally never transmit. Incoming HonkTAK CoT is bounded, validated, and rendered in the HonkTAK overlay.
+## Use HonkTAK
 
-HonkTAK does not access camera feeds, discover devices, scan Wi-Fi/Bluetooth, perform recognition, collect identifiers/contacts/device IDs, write mission packages, control UAS systems, or mutate real mission data. Local removal is local only and does not send a remote delete. The v0.2.12 source requests exactly `android.permission.INTERNET` for foreground, user-triggered Overpass reads; it performs no background polling or upstream OSM/DeFlock writes.
+### Report an observed camera
 
-## Features
+1. Tap HonkTAK's goose tool icon to open the panel, then press **REPORT HONK —
+   PLACE ON MAP**.
+2. Long-press the camera location on the map.
+3. Keep holding and drag toward the direction the camera faces. The live wedge
+   shows the true-bearing azimuth and a range clamped to 10–500 meters.
+4. Release to open the observation form with the location and direction
+   already set.
+5. Select the camera class, confidence, and status; optionally add a short note.
+6. Leave the marker permanent, or select **Temporary marker** and enter an
+   expiry from 1 minute to 7 days.
+7. Choose one final action:
+   - **SAVE LOCALLY** keeps the observation on this device.
+   - **SHARE TO TEAM** sends it once through ATAK's currently connected TAK
+     network. If ATAK is disconnected, HonkTAK reports failure and neither
+     saves nor sends that attempted shared observation.
 
-- Foreground viewport-bounded OSM ALPR import. Tap or long-press an imported goose or its FOV wedge to reopen the action panel and mark it **DEFEATED — LOCAL ONLY**; **MARK ACTIVE** is the undo.
-- All goose markers—newly placed, locally restored, inbound, active imported, and defeated imported—render at approximately half their v0.2.10 on-map size. Defeated imported geese retain their smaller relative styling, stable OSM-node persistence, red X, desaturation, wedge suppression, local-only behavior, and MARK ACTIVE undo.
+Press **CANCEL PLACEMENT** at any point before the final action to restore
+normal map interaction without saving or transmitting anything.
 
-- Gesture placement: press **REPORT HONK**, long-press the camera location on
-  the map, drag to aim the 45-degree coverage wedge, and release to return to
-  the observation form.
-- The drag sets true-bearing azimuth and a clamped 10–500 m range. Nothing is
-  persisted or transmitted until **SAVE LOCALLY** or **SHARE TO TEAM** is
-  pressed.
-- Four randomized local SITREPs.
-- `FLOCKPOCALYPSE` when three active sightings fall within 500 m of any active sighting.
-- Camera class, optional azimuth, confidence, status, bounded notes, and observed time.
-- Permanent, always-active local markers by default, restored when the plugin reloads.
-- Explicit Temporary selection reveals a configurable expiry from 1 minute to 7 days; permanent markers never inherit that timer.
-- A disabled DeFlock submission action reserves a clean UI boundary for the researched OpenStreetMap path without implementing submission.
-- Optional audio setting is disabled by default. v0.1.0 intentionally bundles no audio asset, so the control remains disabled.
+### Review public ALPR cameras
 
-## Public source authority
+1. Pan and zoom to the area you want to inspect. The viewport must span no more
+   than one degree of latitude or longitude.
+2. Press **LOAD CAMERAS IN VIEW**.
+3. Tap or long-press an imported goose marker or its FOV wedge.
+4. Use **MARK DEFEATED — LOCAL ONLY** to apply a persistent local override, or
+   **MARK ACTIVE** to undo it.
 
-This project was derived from the public `plugin-examples/plugintemplate` in [`deptofdefense/AndroidTacticalAssaultKit-CIV`](https://github.com/deptofdefense/AndroidTacticalAssaultKit-CIV) at commit `889eee292c43d3d2eafdd1f2fbf378ad5cd89ecc`, tag `4.6.0.5`, dated 2024-10-18. Compatibility validation additionally used an ATAK 5.6.0 CIV SDK supplied outside this repository; that SDK is not redistributable and is not included. No TAK.gov SDK, UAS Tool artifact, credential, or signing key is included in this repository.
+Imported-camera state never writes to OpenStreetMap or DeFlock and never emits
+CoT. When a refresh is unavailable, HonkTAK can display the last cached result
+for the same viewport as stale data.
 
-## Use
+## Action and network behavior
 
-1. Press **REPORT HONK** to enter exclusive map-placement mode.
-2. Long-press the desired camera location, keep holding, and drag to aim the
-   live coverage wedge.
-3. Release to finalize the pending anchor, azimuth, range, and 45-degree FOV.
-4. Complete the form, then choose **SAVE LOCALLY** or explicitly choose
-   **SHARE TO TEAM**. **CANCEL PLACEMENT** restores normal map interaction.
+| Action | Saves locally | Uses TAK network | Uses Overpass | Writes upstream |
+|---|:---:|:---:|:---:|:---:|
+| Start, aim, or cancel placement | No | No | No | No |
+| **SAVE LOCALLY** | Yes | No | No | No |
+| **SHARE TO TEAM** | On successful share | **Yes, once** | No | No |
+| **LOAD CAMERAS IN VIEW** | Caches the response | No | **Yes, foreground** | No |
+| **MARK DEFEATED / MARK ACTIVE** | Yes | No | No | No |
+| **SUBMIT TO DEFLOCK** | Disabled | No | No | No |
 
-Permanent local observations and their wedges restore when HonkTAK reloads.
-Explicitly temporary observations and their wedges expire together. Incoming
-validated HonkTAK CoT recreates the same wedge. Older HonkTAK events without
-range/FOV or lifetime fields use bounded legacy defaults.
+HonkTAK uses ATAK's public external CoT dispatcher for team sharing. It does not
+open a separate sharing socket or silently retry. The only Android permission
+requested by v0.2.12 is `android.permission.INTERNET`, used for the explicit
+foreground Overpass read.
 
-## Build status
+HonkTAK does **not** access camera feeds, discover nearby devices, scan
+Wi-Fi/Bluetooth, perform recognition, collect contacts or device identifiers,
+write mission packages, control UAS systems, or modify upstream OSM/DeFlock
+data. Local removal is local only and does not send a remote delete.
 
-The source declares Plugin API `5.6.0.CIV` and was compiled through the
-Developer ATAK 5.6 SDK debug path. Host tests and build-time inspection pass.
-Gesture execution on a device is not yet validated. Retail
-ATAK signer trust is unresolved and is not claimed by this source snapshot.
+## Marker behavior
 
-Build prerequisites are Android SDK 36, Java 17-compatible bytecode tooling, and a licensed ATAK `5.6.0.CIV` SDK/devkit stored outside the repository. Create an untracked `local.properties` with local SDK paths and signing-key references. Never commit it. Do not substitute the public 4.6 devkit, reverse-engineer the Play Store APK, or redistribute SDK material.
+- Newly placed, restored, inbound, and imported cameras use the same compact
+  goose-marker size policy.
+- Defeated imported cameras keep their smaller relative scale, desaturated
+  styling, red X, and suppressed FOV wedge.
+- Incoming validated HonkTAK CoT reconstructs the marker and wedge. Older
+  HonkTAK events without range, FOV, or lifetime fields receive bounded legacy
+  defaults.
+- Explicitly temporary markers and their wedges expire together. Permanent
+  markers never inherit a previous temporary duration.
 
-Run the developer build with:
+## Build
 
-```text
+### Requirements
+
+- Android SDK 36
+- Java 17-compatible tooling
+- A licensed ATAK `5.6.0.CIV` SDK/devkit stored outside this repository
+
+Create an untracked `local.properties` containing your local SDK and signing
+references. Never commit that file or redistribute ATAK SDK material.
+
+```bash
 ./gradlew assembleCivDebug
 ```
 
-## Install
+The repository does not include an ATAK SDK, TAK.gov artifact, UAS Tool
+artifact, signing key, or release APK. Do not substitute the public 4.6 devkit
+or reverse-engineer the Play Store APK.
 
-Development builds are installed manually. After independently verifying the
-APK hash and signer, install it using the normal ATAK-CIV plugin process. SDK
-compile compatibility is validated for Plugin API `5.6.0.CIV`; device/runtime
-compatibility must still be confirmed on a compatible test device.
+## Install for development
 
-Expected Android warnings are limited to the source-specific **Install unknown
-apps** prompt above and the standard package-installer confirmation. A Play
-Protect scan prompt may also appear depending on the phone's policy. HonkTAK
-must not be described as runtime-tested or fully installable until ATAK 5.6
-accepts its standalone signing certificate and plugin registration in a device
-test.
+Builds are installed manually using the normal ATAK-CIV plugin workflow after
+independently verifying the APK hash and signer. A matching Developer ATAK
+5.6.0.CIV Debug build is the known development target.
 
-## Tests
+This source snapshot does **not** claim retail ATAK compatibility. A retail or
+Play Store ATAK installation can reject a plugin whose signer is not trusted by
+that ATAK build.
 
-Host-side unit tests cover explicit one-shot share gating, no silent sends, CoT
-serialization/receive parsing, malformed/oversized/stale/range rejection,
-expiry, azimuth and placement range/FOV bounds, listener-session state,
-backward-compatible wedge fields, local-only construction, and FLOCKPOCALYPSE.
-The v0.2.12 validation scope is 40 passing JVM tests plus the complete
-`testCivDebugUnitTest`, `lintCivDebug`, `assembleCivDebug`, and
-`assembleCivDebugAndroidTest` Gradle gate, API/signer/permission inspection,
-and packaged loader-descriptor comparison. The tests include deterministic
-coverage of viewport-bounded import, selection/action availability,
-defeated-versus-active style and scale, persistence/undo, wedge suppression,
-and local-only/no-upstream-write policy.
-On-device gesture behavior remains outside that evidence.
+To remove the plugin, disable or remove HonkTAK from ATAK's **Tool Manager**
+when available, then use Android **Settings → Apps → HonkTAK → Uninstall** and
+restart ATAK. Uninstalling clears plugin-private local records.
 
-See [`VALIDATION.md`](VALIDATION.md) and
-[`docs/DEVICE_TESTING.md`](docs/DEVICE_TESTING.md) for reproducible validation
-scope and device-test prerequisites.
+## Validation
 
-## Uninstall / rollback
+The v0.2.12 host gate covers 40 JVM tests plus:
 
-In ATAK, remove or disable HonkTAK from **Tool Manager** if that option is available. Then open Android **Settings → Apps → HonkTAK → Uninstall** and restart ATAK. Disabling or unloading removes the rendered overlay while preserving permanent plugin-local records for reload; uninstalling clears the plugin's private records. To roll back, uninstall the current plugin and install a separately verified earlier artifact only if it is compatible with the target ATAK build.
+```bash
+./gradlew testCivDebugUnitTest lintCivDebug \
+  assembleCivDebug assembleCivDebugAndroidTest
+```
 
-## License
+Coverage includes one-shot share gating, CoT serialization and bounded receive
+parsing, placement math, expiry, listener restoration, local persistence,
+viewport-bounded import, defeated/active overrides, wedge suppression, marker
+scaling, and no-upstream-write behavior.
 
-GPL-3.0-only, matching the upstream public template. See `LICENSE` and `NOTICE`.
+See [VALIDATION.md](VALIDATION.md) for reproducible host evidence and
+[docs/DEVICE_TESTING.md](docs/DEVICE_TESTING.md) for the remaining physical
+device checks.
+
+## Source and license
+
+HonkTAK was derived from the public
+[`deptofdefense/AndroidTacticalAssaultKit-CIV`](https://github.com/deptofdefense/AndroidTacticalAssaultKit-CIV)
+plugin template at commit `889eee292c43d3d2eafdd1f2fbf378ad5cd89ecc`
+(tag `4.6.0.5`). Compatibility validation also used a separately supplied ATAK
+5.6.0 CIV SDK that is not redistributable and is not included here.
+
+Licensed under `GPL-3.0-only`. See [LICENSE](LICENSE) and [NOTICE](NOTICE).

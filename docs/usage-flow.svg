@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-labelledby="title desc">
+  <title id="title">HonkTAK usage flow</title>
+  <desc id="desc">Four steps showing report, aim, save or share, and review of imported camera states.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#1d252c"/><stop offset="1" stop-color="#101519"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-30%" width="140%" height="170%"><feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000" flood-opacity=".45"/></filter>
+    <symbol id="goose" viewBox="0 0 48 48">
+      <path fill="#f4f1de" d="M8 29C8 20 18 16 27 20c4 2 7 4 12 3-2 9-10 14-20 13-7 0-11-3-11-7Z"/>
+      <path fill="#f4f1de" d="M30 22c-1-6 0-12 4-15 4-1 7 2 6 6-2 3-4 6-3 11Z"/>
+      <path fill="#e9c46a" d="m39 11 8 3-8 2Z"/>
+      <circle cx="36" cy="10" r="1.2" fill="#222"/>
+    </symbol>
+  </defs>
+  <rect width="1200" height="300" rx="16" fill="#0d1115"/>
+
+  <g font-family="Arial, sans-serif">
+    <g transform="translate(28 25)" filter="url(#shadow)">
+      <rect width="260" height="250" rx="12" fill="url(#bg)" stroke="#44515b"/>
+      <circle cx="38" cy="38" r="20" fill="#a53631"/><text x="38" y="44" text-anchor="middle" fill="#fff" font-size="18" font-weight="700">1</text>
+      <text x="72" y="44" fill="#fff" font-size="17" font-weight="700">REPORT</text>
+      <rect x="25" y="85" width="210" height="55" rx="7" fill="#9e302d" stroke="#dd6b66"/>
+      <text x="130" y="118" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">REPORT HONK</text>
+      <text x="25" y="177" fill="#cbd5dc" font-size="13">Enter exclusive map-placement</text>
+      <text x="25" y="197" fill="#cbd5dc" font-size="13">mode. No data is saved or sent.</text>
+    </g>
+
+    <path d="M301 150h34" stroke="#50ddf8" stroke-width="3"/><path d="m328 142 12 8-12 8" fill="#50ddf8"/>
+
+    <g transform="translate(340 25)" filter="url(#shadow)">
+      <rect width="260" height="250" rx="12" fill="url(#bg)" stroke="#44515b"/>
+      <circle cx="38" cy="38" r="20" fill="#126d80"/><text x="38" y="44" text-anchor="middle" fill="#fff" font-size="18" font-weight="700">2</text>
+      <text x="72" y="44" fill="#fff" font-size="17" font-weight="700">AIM</text>
+      <path d="M0 0 104-55A118 118 0 0 1 102 32Z" transform="translate(104 130) rotate(-10)" fill="#ffa000" fill-opacity=".22" stroke="#ffc247"/>
+      <use href="#goose" x="83" y="106" width="42" height="42"/>
+      <path d="M60 86q-25 43 0 78" fill="none" stroke="#f2ce62" stroke-width="3" stroke-dasharray="5 5"/>
+      <text x="25" y="199" fill="#cbd5dc" font-size="13">Long-press the camera location,</text>
+      <text x="25" y="219" fill="#cbd5dc" font-size="13">drag to face it, then release.</text>
+    </g>
+
+    <path d="M613 150h34" stroke="#50ddf8" stroke-width="3"/><path d="m640 142 12 8-12 8" fill="#50ddf8"/>
+
+    <g transform="translate(652 25)" filter="url(#shadow)">
+      <rect width="260" height="250" rx="12" fill="url(#bg)" stroke="#44515b"/>
+      <circle cx="38" cy="38" r="20" fill="#367252"/><text x="38" y="44" text-anchor="middle" fill="#fff" font-size="18" font-weight="700">3</text>
+      <text x="72" y="44" fill="#fff" font-size="17" font-weight="700">COMMIT</text>
+      <rect x="25" y="82" width="210" height="44" rx="6" fill="#275d42" stroke="#52a879"/>
+      <text x="130" y="109" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">SAVE LOCALLY</text>
+      <rect x="25" y="138" width="210" height="44" rx="6" fill="#075d70" stroke="#40bfd6"/>
+      <text x="130" y="165" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">SHARE TO TEAM</text>
+      <text x="25" y="211" fill="#cbd5dc" font-size="13">Sharing is explicit, one-shot, and</text>
+      <text x="25" y="231" fill="#cbd5dc" font-size="13">uses ATAK's connected TAK network.</text>
+    </g>
+
+    <path d="M925 150h34" stroke="#50ddf8" stroke-width="3"/><path d="m952 142 12 8-12 8" fill="#50ddf8"/>
+
+    <g transform="translate(964 25)" filter="url(#shadow)">
+      <rect width="208" height="250" rx="12" fill="url(#bg)" stroke="#44515b"/>
+      <circle cx="38" cy="38" r="20" fill="#6d5a2a"/><text x="38" y="44" text-anchor="middle" fill="#fff" font-size="18" font-weight="700">4</text>
+      <text x="72" y="44" fill="#fff" font-size="17" font-weight="700">REVIEW</text>
+      <use href="#goose" x="42" y="78" width="48" height="48"/>
+      <g transform="translate(146 102)"><use href="#goose" x="-24" y="-24" width="48" height="48" opacity=".6"/><path d="M-19-19 19 19M19-19-19 19" stroke="#ff5151" stroke-width="5" stroke-linecap="round"/></g>
+      <text x="104" y="160" text-anchor="middle" fill="#50ddf8" font-size="12" font-weight="700">ACTIVE ↔ DEFEATED</text>
+      <text x="20" y="195" fill="#cbd5dc" font-size="12">Import public ALPR cameras</text>
+      <text x="20" y="214" fill="#cbd5dc" font-size="12">and manage local-only state.</text>
+    </g>
+  </g>
+</svg>
