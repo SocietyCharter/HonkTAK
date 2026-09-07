@@ -18,7 +18,7 @@ buildscript {
     ext.takrepoPassword = 'disabled'
     ext.takdevPlugin = propertyOr('takdev.plugin', '')
     if (!takdevPlugin) {
-        throw new GradleException('Authorized ATAK 5.6 takdev.plugin path must be configured in local.properties.')
+        throw new GradleException('ATAK 5.6 takdev.plugin path must be configured in local.properties.')
     }
 
     repositories {
@@ -38,7 +38,7 @@ plugins {
 apply plugin: 'atak-takdev-plugin'
 
 // The offline TakDev plugin supplies ATAK artifacts through its private flatDir.
-// Keep public Android lint/tooling resolvable for guarded release builds.
+// Keep public Android lint/tooling resolvable for local release builds.
 repositories {
     google()
     mavenCentral()
@@ -66,7 +66,7 @@ if (apkTaskRequested && !signingConfigured && !releaseTaskRequested) {
     throw new GradleException('Private HonkTAK signing configuration is required for APK tasks.')
 }
 if (releaseTaskRequested && !releaseSigningConfigured) {
-    throw new GradleException('Authorized ATAK release signing configuration is required for release APK tasks.')
+    throw new GradleException('ATAK release signing configuration is required for release APK tasks.')
 }
 
 android {
@@ -152,8 +152,8 @@ dependencies {
     testImplementation 'org.json:json:20240303'
 }
 
-// Owner-supplied ATAK Espresso harness remains outside version control. The
-// local path points at the private SDK intake and is required only for test
+// The locally supplied ATAK Espresso harness remains outside version control.
+// The path is required only for test
 // artifact builds; no SDK test binaries are redistributed with source.
 def takEspressoSetup = privateProperties.getProperty('takEspressoSetup')
 if (takEspressoSetup) {

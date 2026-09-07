@@ -47,7 +47,7 @@ HonkTAK does not access camera feeds, discover devices, scan Wi-Fi/Bluetooth, pe
 
 ## Public source authority
 
-This project was derived from the public `plugin-examples/plugintemplate` in [`deptofdefense/AndroidTacticalAssaultKit-CIV`](https://github.com/deptofdefense/AndroidTacticalAssaultKit-CIV) at commit `889eee292c43d3d2eafdd1f2fbf378ad5cd89ecc`, tag `4.6.0.5`, dated 2024-10-18. Compatibility validation additionally used an authorized ATAK 5.6.0 CIV SDK supplied by the project owner; that SDK is not redistributable and is not included. No TAK.gov SDK, UAS Tool artifact, private package, credential, or signing key is included in this repository.
+This project was derived from the public `plugin-examples/plugintemplate` in [`deptofdefense/AndroidTacticalAssaultKit-CIV`](https://github.com/deptofdefense/AndroidTacticalAssaultKit-CIV) at commit `889eee292c43d3d2eafdd1f2fbf378ad5cd89ecc`, tag `4.6.0.5`, dated 2024-10-18. Compatibility validation additionally used an ATAK 5.6.0 CIV SDK supplied outside this repository; that SDK is not redistributable and is not included. No TAK.gov SDK, UAS Tool artifact, credential, or signing key is included in this repository.
 
 ## Use
 
@@ -66,25 +66,31 @@ range/FOV or lifetime fields use bounded legacy defaults.
 ## Build status
 
 The source declares Plugin API `5.6.0.CIV` and was compiled through the
-authorized Developer ATAK 5.6 SDK debug path. Host tests and guarded build-time
-inspection pass. Gesture execution on a device is not yet accepted. Retail
+Developer ATAK 5.6 SDK debug path. Host tests and build-time inspection pass.
+Gesture execution on a device is not yet validated. Retail
 ATAK signer trust is unresolved and is not claimed by this source snapshot.
 
-Build prerequisites are Android SDK 36, Java 17-compatible bytecode tooling, and an owner-authorized ATAK `5.6.0.CIV` SDK/devkit stored outside the repository. Create an untracked `local.properties` with SDK paths and owner-only signing-key references. Never commit it. Do not substitute the public 4.6 devkit, reverse-engineer the Play Store APK, or redistribute private SDK material.
+Build prerequisites are Android SDK 36, Java 17-compatible bytecode tooling, and a licensed ATAK `5.6.0.CIV` SDK/devkit stored outside the repository. Create an untracked `local.properties` with local SDK paths and signing-key references. Never commit it. Do not substitute the public 4.6 devkit, reverse-engineer the Play Store APK, or redistribute SDK material.
 
-Run only the allowlisted wrapper task for the developer build:
+Run the developer build with:
 
 ```text
 ./gradlew assembleCivDebug
 ```
 
-The guarded Society build surface uses `plugin_build(project_path, task=assembleDebug)` and does not install the result.
-
 ## Install
 
-Installation is deliberately outside this repository's automated workflow. After independently verifying the APK hash and signer, an authorized operator may install it using their normal ATAK-CIV plugin process. SDK compile compatibility is validated for Plugin API `5.6.0.CIV`; device/runtime compatibility must still be confirmed by a separately authorized installation test.
+Development builds are installed manually. After independently verifying the
+APK hash and signer, install it using the normal ATAK-CIV plugin process. SDK
+compile compatibility is validated for Plugin API `5.6.0.CIV`; device/runtime
+compatibility must still be confirmed on a compatible test device.
 
-Expected Android warnings are limited to the source-specific **Install unknown apps** prompt above and the standard package-installer confirmation. A Play Protect scan prompt may also appear depending on the phone's policy. HonkTAK must not be described as runtime-tested or fully installable until ATAK 5.6 accepts its standalone signing certificate and plugin registration during a separately authorized device test.
+Expected Android warnings are limited to the source-specific **Install unknown
+apps** prompt above and the standard package-installer confirmation. A Play
+Protect scan prompt may also appear depending on the phone's policy. HonkTAK
+must not be described as runtime-tested or fully installable until ATAK 5.6
+accepts its standalone signing certificate and plugin registration in a device
+test.
 
 ## Tests
 
@@ -92,7 +98,7 @@ Host-side unit tests cover explicit one-shot share gating, no silent sends, CoT
 serialization/receive parsing, malformed/oversized/stale/range rejection,
 expiry, azimuth and placement range/FOV bounds, listener-session state,
 backward-compatible wedge fields, local-only construction, and FLOCKPOCALYPSE.
-The v0.2.12 evidence scope is 40 passing JVM tests plus the complete
+The v0.2.12 validation scope is 40 passing JVM tests plus the complete
 `testCivDebugUnitTest`, `lintCivDebug`, `assembleCivDebug`, and
 `assembleCivDebugAndroidTest` Gradle gate, API/signer/permission inspection,
 and packaged loader-descriptor comparison. The tests include deterministic
@@ -100,6 +106,10 @@ coverage of viewport-bounded import, selection/action availability,
 defeated-versus-active style and scale, persistence/undo, wedge suppression,
 and local-only/no-upstream-write policy.
 On-device gesture behavior remains outside that evidence.
+
+See [`VALIDATION.md`](VALIDATION.md) and
+[`docs/DEVICE_TESTING.md`](docs/DEVICE_TESTING.md) for reproducible validation
+scope and device-test prerequisites.
 
 ## Uninstall / rollback
 

@@ -48,8 +48,7 @@ never-CoT; persistence or transmission requires an explicit final action.
 
 - 40 host-side JVM tests passed; they inventory every goose render path, verify the v0.2.12-to-v0.2.10 half-size ratio, and preserve defeated relative styling.
 - The complete `testCivDebugUnitTest`, `lintCivDebug`, `assembleCivDebug`, and
-  `assembleCivDebugAndroidTest` gate passed against the owner-authorized ATAK
-  5.6 SDK.
+  `assembleCivDebugAndroidTest` gate passed against an ATAK 5.6 SDK.
 - Plugin API `5.6.0.CIV`, the sole `android.permission.INTERNET` permission,
   SDK development signer, and packaged loader descriptor were inspected.
 - No device/emulator gesture execution is included in this evidence.
@@ -58,5 +57,5 @@ never-CoT; persistence or transmission requires an explicit final action.
 
 The known-loading development configuration is Developer ATAK 5.6.0.CIV Debug
 with its matching SDK development signer. Retail/Play Store ATAK trust is
-unresolved and must not be claimed. Earlier v0.2.x APKs were rejected or
-private test artifacts and are not release assets.
+unresolved and must not be claimed. No v0.2.x APK is included as a release
+asset.
